@@ -18,6 +18,9 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
+script_verstion = "1.0.0"
+print('\nClickTrader version: ' + script_verstion, end='')
+print('    (\'Shift\' + \'esc\' to exit)')  
 
  
 
@@ -26,6 +29,7 @@ def get_position_coordinates(pos_name):
         data = f.readline()
         return pyautogui.position(data.split()[0], data.split()[1])
 
+origin_pos = get_position_coordinates('origin')
 buy_pos = get_position_coordinates('buy')
 sell_pos = get_position_coordinates('sell')
 ask_pos = get_position_coordinates('ask')
@@ -49,12 +53,17 @@ class ClickTrader:
             ['shift', 'b', self.buy_bid,      str(ORDER_BASE_SIZE), 'Buy shares at bid'],
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
-            ['ctrl', 'q',  None,              '0',   'Cancel order'],
+            ['ctrl', 'q',  self.del_order,         '0',   'Cancel order'],
             ['ctrl', 'h',  self.print_all,    '0',   'Print all commands'],
             ['alt', 'F11', self.inc_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size'],
             ['alt', 'F12', self.dec_pos_size, str(ORDER_BASE_SIZE), 'Decrease internal position size']
         ]
 
+    def del_order(Self, none):
+        pyautogui.click(del_order_pos)
+        pyautogui.hotkey('shift', 'del')
+        pyautogui.click(origin_pos)
+        
     def write_position_size(self, size):
         print('New position size: ' + str(size))
         with open(position_size_file, 'w') as f:
@@ -71,13 +80,11 @@ class ClickTrader:
         pyautogui.click(buy_pos)
         #pyautogui.moveTo(buy_pos)
 
-        #pyautogui.click(volume_pos)
-        #pyautogui.write('del')
-       
         pyautogui.doubleClick(volume_pos)
         pyautogui.hotkey('del')
         self.position_size += int(size)
         self.write_position_size(self.position_size)
+        pyautogui.click(origin_pos)
 
     def buy_ask(self, size):
         print('Buy ' + str(size) + ' shares at the ASK + 15 cents')
@@ -99,6 +106,7 @@ class ClickTrader:
         pyautogui.hotkey('del')
         self.position_size -= int(size)
         self.write_position_size(self.position_size)
+        pyautogui.click(origin_pos)
 
     def sell_ask(self, size):
         if size == '0' and self.position_size != 0:
@@ -120,9 +128,6 @@ class ClickTrader:
         else:
             print ('No position')
 
-    #def sell_all(self, size):
-    #    self.sell_bid(self.position_size)
-
     def dec_pos_size(self, size):
         if self.position_size > 0:
             self.position_size -= int(size)
@@ -140,7 +145,8 @@ class ClickTrader:
 ct = ClickTrader()
 
 #print (ct.read_position_size())
-print (ct.position_size)
+print ('Current position size: ' + str(ct.position_size))
+print ('Current position basis: ' + str(ORDER_BASE_SIZE))
 ###############   Program   ###############
 run = True
 while run:

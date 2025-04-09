@@ -9,6 +9,13 @@ def write_pos_to_file(pos, file):
 
 SLEEP_TIME = 2
 
+print ('Hold mouse over ClickTrader')
+time.sleep(SLEEP_TIME)
+pos = pyautogui.position()
+print (pos.x)
+print (pos.y)
+write_pos_to_file(pos, "settings/origin")
+
 print ('Hold mouse over buy button')
 time.sleep(SLEEP_TIME)
 pos = pyautogui.position()
