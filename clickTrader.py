@@ -18,7 +18,7 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
-script_verstion = "1.0.0"
+script_verstion = "1.1.0"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -42,10 +42,12 @@ del_order_pos = get_position_coordinates('del_order')
 
 #BUTTON_DELAY_TIME = 0.13
 BUTTON_DELAY_TIME = 0.0
-ORDER_BASE_SIZE = 200
+ORDER_BASE_SIZE = 100
 class ClickTrader:
     def __init__(self):
         self.position_size = self.read_position_size()
+        self.buy_size = 0
+        self.delete_order_size = 0
 
         self.shortKeyList = [
             ['shift', '1', self.buy_ask,      str(ORDER_BASE_SIZE * 1), 'Buy shares at ask'],
@@ -53,13 +55,20 @@ class ClickTrader:
             ['shift', '3', self.buy_ask,      str(ORDER_BASE_SIZE * 3), 'Buy shares at ask'],
             ['shift', '4', self.buy_ask,      str(ORDER_BASE_SIZE * 4), 'Buy shares at ask'],
             ['shift', '5', self.buy_ask,      str(ORDER_BASE_SIZE * 5), 'Buy shares at ask'],
-            ['shift', 'b', self.buy_bid,      str(ORDER_BASE_SIZE), 'Buy shares at bid'],
+            ['shift', '6', self.buy_ask,      str(ORDER_BASE_SIZE * 6), 'Buy shares at ask'],
+            ['shift', '7', self.buy_ask,      str(ORDER_BASE_SIZE * 7), 'Buy shares at ask'],
+            ['shift', '8', self.buy_ask,      str(ORDER_BASE_SIZE * 8), 'Buy shares at ask'],
+            ['shift', '9', self.buy_ask,      str(ORDER_BASE_SIZE * 9), 'Buy shares at ask'],
+            ['shift', '0', self.buy_ask,      str(ORDER_BASE_SIZE * 10), 'Buy shares at ask'],
+            ['shift', 'b', self.buy_bid,      '0', 'Buy shares at bid'],
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
+            ['ctrl', 'x',  self.sell_bid,     '0.5', 'Sell half position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
             ['ctrl', 'q',  self.del_order,    '0',   'Cancel order'],
             ['ctrl', 'h',  self.print_all,    '0',   'Print all commands'],
-            ['alt', 'F11', self.inc_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size'],
-            ['alt', 'F12', self.dec_pos_size, str(ORDER_BASE_SIZE), 'Decrease internal position size']
+            ['alt', 'F9',  self.set_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size'],
+            ['alt', 'F11', self.dec_pos_size, str(ORDER_BASE_SIZE), 'Decrease internal position size'],
+            ['alt', 'F12', self.inc_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size']
         ]
 
     def del_order(Self, none):
@@ -68,6 +77,8 @@ class ClickTrader:
         pyautogui.hotkey('shift', 'del')
         time.sleep(0.01)
         pyautogui.click(origin_pos)
+        self.position_size = self.delete_order_size
+        print('Restored position size: ' + str(self.position_size))
         
     def write_position_size(self, size):
         print('New position size: ' + str(size))
@@ -88,6 +99,7 @@ class ClickTrader:
         pyautogui.doubleClick(volume_pos)
         pyautogui.hotkey('del')
         self.position_size += int(size)
+        self.delete_order_size = self.position_size
         self.write_position_size(self.position_size)
         pyautogui.click(origin_pos)
 
@@ -97,9 +109,13 @@ class ClickTrader:
         self.buy(size)
        
     def buy_bid(self, size):
-        print('Buy ' + str(size) + ' shares at the BID - 15 cents')
+        print('Buy ' + str(self.buy_size) + ' shares at the BID')
         pyautogui.doubleClick(bid_pos)
-        self.buy(size)
+        
+        if self.position_size == 0:
+            self.position_size = self.buy_size
+            self.delete_order_size = self.position_size
+        self.buy(str(self.buy_size))
 
     def sell(self, size):
         pyautogui.doubleClick(volume_pos)
@@ -110,6 +126,7 @@ class ClickTrader:
         pyautogui.doubleClick(volume_pos)
         pyautogui.hotkey('del')
         self.position_size -= int(size)
+        self.delete_order_size = self.position_size
         self.write_position_size(self.position_size)
         pyautogui.click(origin_pos)
 
@@ -125,6 +142,12 @@ class ClickTrader:
     def sell_bid(self, size):
         if size == '0' and self.position_size != 0:
             size = self.position_size
+        if size == '0.5' and self.position_size != 0:
+            size = self.position_size / 2
+            self.position_size = self.position_size - size
+            self.delete_order_size = self.position_size
+            print ('Sold: ' + size)
+            print ('Remaining: ' + self.position_size)
 
         print ('Sell bid: ' + str(size))  
         if int(size) >= self.position_size:
@@ -133,13 +156,25 @@ class ClickTrader:
         else:
             print ('No position')
 
+    def set_pos_size(self, size):
+        print('Set bid size: ')
+        self.buy_size = int(input())
+        
+        print('Position size: ' + str(self.buy_size))
+
     def dec_pos_size(self, size):
         if self.position_size > 0:
             self.position_size -= int(size)
+            self.delete_order_size = self.position_size
+
+            if self.position_size < 0:
+                self.position_size = 0
+                
             self.write_position_size(self.position_size)
 
     def inc_pos_size(self, size):
         self.position_size += int(size)
+        self.delete_order_size = self.position_size
         self.write_position_size(self.position_size)
 
     def print_all(self, none):
@@ -166,7 +201,7 @@ while run:
                     shortKey[2](shortKey[3])
                     end = datetime.datetime.now()
                     interval = end - start
-                    print(interval)
+                    #print(interval)
 
                 #print (shortKey[0] + '+' + shortKey[1] + ': ' + str(shortKey[2]) + ' ' + shortKey[3])
                 time.sleep(BUTTON_DELAY_TIME)
