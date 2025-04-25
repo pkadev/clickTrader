@@ -19,7 +19,7 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
-script_verstion = "1.1.3"
+script_verstion = "1.2.3"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -81,7 +81,7 @@ class ClickTrader:
     def del_order(self, none):
         pyautogui.click(del_order_pos)
         time.sleep(0.01)
-
+        
         pyautogui.click(origin_pos)
         self.position_size = self.delete_order_size
         print('Restored position size: ' + str(self.position_size))
@@ -102,13 +102,12 @@ class ClickTrader:
             return self.position_size
 
     def buy(self, size):
-        #pyautogui.doubleClick(volume_pos)
+        while(keyboard.is_pressed('shift')):
+            pass
         pyautogui.write(size)
-        #pyautogui.click(buy_pos)
-        pyautogui.moveTo(buy_pos)
+        pyautogui.click(buy_pos)
+        #pyautogui.moveTo(buy_pos)
 
-        #pyautogui.doubleClick(volume_pos)
-        #pyautogui.hotkey('del')
         self.position_size += int(size)
         self.delete_order_size = self.position_size
         self.write_position_size(self.position_size)
@@ -129,13 +128,12 @@ class ClickTrader:
         self.buy(str(self.buy_size))
 
     def sell(self, size):
-        #pyautogui.doubleClick(volume_pos)
+        while(keyboard.is_pressed('shift')):
+            pass
         pyautogui.write(str(size))
-        #pyautogui.click(sell_pos)
-        pyautogui.moveTo(sell_pos)
+        pyautogui.click(sell_pos)
+        #pyautogui.moveTo(sell_pos)
 
-        #pyautogui.doubleClick(volume_pos)
-        #pyautogui.hotkey('del')
         self.delete_order_size = self.position_size
         self.position_size -= int(size)
         self.write_position_size(self.position_size)
