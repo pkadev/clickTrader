@@ -2,11 +2,20 @@ import keyboard  # using module keyboard
 import pyautogui
 import signal
 import time
+import os
 
 def write_pos_to_file(pos, file):
     with open(file, 'w') as f:
         f.write(str(pos.x) + ' ' + str(pos.y))
 
+
+if os.path.isdir('settings'):
+    pass
+else:
+    print('Settings directory does not exist')
+    os.mkdir('settings')
+    
+ 
 SLEEP_TIME = 2
 
 print ('Hold mouse over ClickTrader')
