@@ -20,7 +20,7 @@ position_size = 0
 position_size_file = 'settings/position_size'
 
 os.system('cls' if os.name == 'nt' else 'clear')
-script_verstion = "1.3.3"
+script_verstion = "1.3.4"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -151,20 +151,20 @@ class ClickTrader:
 
     def sell_bid(self, size):
         if size == '0' and self.position_size != 0:
-            
             size = self.position_size
-        if size == '0.5' and self.position_size != 0:
+            print ('Get rid of whole position (' + str(size) + ')')
+        elif size == '0.5' and self.position_size != 0:
             size = self.position_size / 2
             self.position_size = self.position_size - size
 
-            print ('Sold: ' + size)
+            print ('Sold half: ' + size)
             print ('Remaining: ' + self.position_size)
         
         
         print ('Sell bid: ' + str(size))  
-        if int(size) >= self.position_size:
-            pyautogui.doubleClick(bid_inc_pos)
-            self.sell(size)
+        pyautogui.doubleClick(bid_inc_pos)
+        self.sell(size)
+
         else:
             print ('No position')
 
