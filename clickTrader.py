@@ -131,14 +131,22 @@ class ClickTrader:
     def sell(self, size):
         while(keyboard.is_pressed('shift')):
             pass
-        pyautogui.write(str(size))
-        pyautogui.click(sell_pos)
-        #pyautogui.moveTo(sell_pos)
+        while(keyboard.is_pressed('ctrl')):
+            print ('ctrl')
+            while(keyboard.is_pressed('ctrl')):
+                print ('ctrl')
+                pass
+            print ('Let go')
+        time.sleep(0.5)
+        
+        pyautogui.write("100")
+        #pyautogui.click(sell_pos)
+        pyautogui.moveTo(sell_pos)
 
         self.delete_order_size = self.position_size
         self.position_size -= int(size)
         self.write_position_size(self.position_size)
-        pyautogui.click(origin_pos)
+        #pyautogui.click(origin_pos)
 
     def sell_ask(self, size):
         if size == '0' and self.position_size != 0:
