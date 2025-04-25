@@ -18,7 +18,7 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
-script_verstion = "1.1.1"
+script_verstion = "1.1.2"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -78,7 +78,9 @@ class ClickTrader:
         time.sleep(0.01)
         pyautogui.click(origin_pos)
         self.position_size = self.delete_order_size
+        print('del position size: ' + str(self.delete_order_size))
         print('Restored position size: ' + str(self.position_size))
+        
         
     def write_position_size(self, size):
         print('New position size: ' + str(size))
@@ -125,8 +127,8 @@ class ClickTrader:
 
         pyautogui.doubleClick(volume_pos)
         pyautogui.hotkey('del')
-        self.position_size -= int(size)
         self.delete_order_size = self.position_size
+        self.position_size -= int(size)
         self.write_position_size(self.position_size)
         pyautogui.click(origin_pos)
 
@@ -141,14 +143,16 @@ class ClickTrader:
 
     def sell_bid(self, size):
         if size == '0' and self.position_size != 0:
+            
             size = self.position_size
         if size == '0.5' and self.position_size != 0:
             size = self.position_size / 2
             self.position_size = self.position_size - size
-            self.delete_order_size = self.position_size
+
             print ('Sold: ' + size)
             print ('Remaining: ' + self.position_size)
-
+        
+        
         print ('Sell bid: ' + str(size))  
         if int(size) >= self.position_size:
             pyautogui.doubleClick(bid_inc_pos)
