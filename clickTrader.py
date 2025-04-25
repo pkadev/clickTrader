@@ -4,6 +4,7 @@ import signal
 import traceback
 import time
 import datetime
+import sys
 
 signal.signal(signal.SIGINT, signal.SIG_IGN)
 #signal.signal(signal.SIGSTP, signal.SIG_IGN)
@@ -28,17 +29,20 @@ def get_position_coordinates(pos_name):
     with open('settings/'+ pos_name, 'r') as f:
         data = f.readline()
         return pyautogui.position(data.split()[0], data.split()[1])
-
-origin_pos = get_position_coordinates('origin')
-buy_pos = get_position_coordinates('buy')
-sell_pos = get_position_coordinates('sell')
-ask_pos = get_position_coordinates('ask')
-ask_inc_pos = get_position_coordinates('ask_inc')
-bid_pos = get_position_coordinates('bid')
-bid_inc_pos = get_position_coordinates('bid_inc')
-volume_pos = get_position_coordinates('volume')
-price_pos = get_position_coordinates('price')
-del_order_pos = get_position_coordinates('del_order')
+try:
+    origin_pos = get_position_coordinates('origin')
+    buy_pos = get_position_coordinates('buy')
+    sell_pos = get_position_coordinates('sell')
+    ask_pos = get_position_coordinates('ask')
+    ask_inc_pos = get_position_coordinates('ask_inc')
+    bid_pos = get_position_coordinates('bid')
+    bid_inc_pos = get_position_coordinates('bid_inc')
+    volume_pos = get_position_coordinates('volume')
+    price_pos = get_position_coordinates('price')
+    del_order_pos = get_position_coordinates('del_order')
+except:
+    print('No positions recorded. Run calibration.')
+    sys.exit()
 
 #BUTTON_DELAY_TIME = 0.13
 BUTTON_DELAY_TIME = 0.0
