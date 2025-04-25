@@ -18,7 +18,7 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
-script_verstion = "1.1.0"
+script_verstion = "1.1.1"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -71,7 +71,7 @@ class ClickTrader:
             ['alt', 'F12', self.inc_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size']
         ]
 
-    def del_order(Self, none):
+    def del_order(self, none):
         pyautogui.click(del_order_pos)
         time.sleep(0.01)
         pyautogui.hotkey('shift', 'del')
