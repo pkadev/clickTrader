@@ -165,9 +165,6 @@ class ClickTrader:
         pyautogui.doubleClick(bid_inc_pos)
         self.sell(size)
 
-        else:
-            print ('No position')
-
     def set_pos_size(self, size):
         print('Set bid size: ')
         self.buy_size = int(input())
