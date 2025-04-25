@@ -5,6 +5,7 @@ import traceback
 import time
 import datetime
 import sys
+import os
 
 signal.signal(signal.SIGINT, signal.SIG_IGN)
 #signal.signal(signal.SIGSTP, signal.SIG_IGN)
@@ -15,15 +16,15 @@ ask_pos = 0
 bid_pos = 0
 volume_pos = 0
 price_pos = 0
-
 position_size = 0
 position_size_file = 'settings/position_size'
 
-script_verstion = "1.2.3"
+os.system('cls' if os.name == 'nt' else 'clear')
+script_verstion = "1.3.3"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
- 
+
 
 def get_position_coordinates(pos_name):
     with open('settings/'+ pos_name, 'r') as f:
