@@ -20,7 +20,7 @@ position_size = 0
 position_size_file = 'settings/position_size'
 
 os.system('cls' if os.name == 'nt' else 'clear')
-script_verstion = "1.3.4"
+script_verstion = "1.3.5"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -72,7 +72,7 @@ class ClickTrader:
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
             ['ctrl', 'x',  self.sell_bid,     '0.5', 'Sell half position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
-            ['ctrl', 'q',  self.del_order,    '0',   'Cancel order'],
+            ['ctrl', 'del',  self.del_order,  '0',   'Cancel all orders'],
             ['ctrl', 'h',  self.print_all,    '0',   'Print all commands'],
             ['alt', 'F9',  self.set_pos_size, str(ORDER_BASE_SIZE), 'Increase internal position size'],
             ['alt', 'F11', self.dec_pos_size, str(ORDER_BASE_SIZE), 'Decrease internal position size'],
@@ -80,9 +80,10 @@ class ClickTrader:
         ]
 
     def del_order(self, none):
+#        while(keyboard.is_pressed('ctrl')):
+#            pass
+
         pyautogui.click(del_order_pos)
-        time.sleep(0.01)
-        
         pyautogui.click(origin_pos)
         self.position_size = self.delete_order_size
         print('Restored position size: ' + str(self.position_size))
@@ -98,7 +99,7 @@ class ClickTrader:
             try:
                 self.position_size = int(f.read())
             except:
-                self.position_size = 0.0
+                self.position_size = 0
 
             return self.position_size
 
@@ -129,24 +130,17 @@ class ClickTrader:
         self.buy(str(self.buy_size))
 
     def sell(self, size):
-        while(keyboard.is_pressed('shift')):
-            pass
         while(keyboard.is_pressed('ctrl')):
-            print ('ctrl')
-            while(keyboard.is_pressed('ctrl')):
-                print ('ctrl')
-                pass
-            print ('Let go')
-        time.sleep(0.5)
-        
-        pyautogui.write("100")
-        #pyautogui.click(sell_pos)
-        pyautogui.moveTo(sell_pos)
+            pass
+
+        pyautogui.write(str(size))
+        pyautogui.click(sell_pos)
+        #pyautogui.moveTo(sell_pos)
 
         self.delete_order_size = self.position_size
         self.position_size -= int(size)
         self.write_position_size(self.position_size)
-        #pyautogui.click(origin_pos)
+        pyautogui.click(origin_pos)
 
     def sell_ask(self, size):
         if size == '0' and self.position_size != 0:
@@ -164,7 +158,6 @@ class ClickTrader:
         elif size == '0.5' and self.position_size != 0:
             size = self.position_size / 2
             self.position_size = self.position_size - size
-
             print ('Sold half: ' + size)
             print ('Remaining: ' + self.position_size)
         
