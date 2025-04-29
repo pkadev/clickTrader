@@ -20,7 +20,7 @@ position_size = 0
 position_size_file = 'settings/position_size'
 
 os.system('cls' if os.name == 'nt' else 'clear')
-script_verstion = "1.3.5"
+script_verstion = "1.3.6"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -70,7 +70,7 @@ class ClickTrader:
             ['shift', '0', self.buy_ask,      str(ORDER_BASE_SIZE * 10), 'Buy shares at ask'],
             ['shift', 'b', self.buy_bid,      '0', 'Buy shares at bid'],
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
-            ['ctrl', 'x',  self.sell_bid,     '0.5', 'Sell half position at bid'],
+            ['ctrl', 'x',  self.sell_bid,     '2',   'Sell half position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
             ['ctrl', 'del',  self.del_order,  '0',   'Cancel all orders'],
             ['ctrl', 'h',  self.print_all,    '0',   'Print all commands'],
@@ -155,11 +155,10 @@ class ClickTrader:
         if size == '0' and self.position_size != 0:
             size = self.position_size
             print ('Get rid of whole position (' + str(size) + ')')
-        elif size == '0.5' and self.position_size != 0:
+        elif size == '2' and self.position_size != 0:
             size = self.position_size / 2
-            self.position_size = self.position_size - size
-            print ('Sold half: ' + size)
-            print ('Remaining: ' + self.position_size)
+            print ('Sell half: 200.0' + str(size))
+            print ('Remaining: ' + str(self.position_size))
         
         
         print ('Sell bid: ' + str(size))  
