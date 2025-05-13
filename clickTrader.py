@@ -19,8 +19,10 @@ price_pos = 0
 position_size = 0
 position_size_file = 'settings/position_size'
 
+#Clear the terminal
 os.system('cls' if os.name == 'nt' else 'clear')
-script_verstion = "1.3.6"
+
+script_verstion = "1.3.7"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
