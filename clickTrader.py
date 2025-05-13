@@ -110,8 +110,9 @@ class ClickTrader:
         pyautogui.click(buy_pos)
         #pyautogui.moveTo(buy_pos)
 
-        self.position_size += int(size)
         self.delete_order_size = self.position_size
+        self.position_size += int(size)
+
         self.write_position_size(self.position_size)
         pyautogui.click(origin_pos)
 
@@ -126,7 +127,9 @@ class ClickTrader:
         
         if self.position_size == 0:
             self.position_size = self.buy_size
-            self.delete_order_size = self.position_size
+        else:
+            pass
+
         self.buy(str(self.buy_size))
 
     def sell(self, size):
@@ -156,10 +159,7 @@ class ClickTrader:
             size = self.position_size
             print ('Get rid of whole position (' + str(size) + ')')
         elif size == '2' and self.position_size != 0:
-            size = self.position_size / 2
-            print ('Sell half: 200.0' + str(size))
-            print ('Remaining: ' + str(self.position_size))
-        
+            size = int(self.position_size / 2)
         
         print ('Sell bid: ' + str(size))  
         pyautogui.doubleClick(bid_inc_pos)
