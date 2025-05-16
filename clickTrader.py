@@ -22,7 +22,7 @@ position_size_file = 'settings/position_size'
 #Clear the terminal
 os.system('cls' if os.name == 'nt' else 'clear')
 
-script_verstion = "1.3.7"
+script_verstion = "1.3.8"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -56,7 +56,6 @@ ORDER_BASE_SIZE = 100
 class ClickTrader:
     def __init__(self):
         self.position_size = self.read_position_size()
-        self.buy_size = 0
         self.delete_order_size = 0
 
         self.shortKeyList = [
@@ -70,7 +69,8 @@ class ClickTrader:
             ['shift', '8', self.buy_ask,      str(ORDER_BASE_SIZE * 8), 'Buy shares at ask'],
             ['shift', '9', self.buy_ask,      str(ORDER_BASE_SIZE * 9), 'Buy shares at ask'],
             ['shift', '0', self.buy_ask,      str(ORDER_BASE_SIZE * 10), 'Buy shares at ask'],
-            ['shift', 'b', self.buy_bid,      '0', 'Buy shares at bid'],
+            ['shift', 'b', self.buy_bid,      str(ORDER_BASE_SIZE * 10), 'Buy shares at bid'],
+            ['shift', 'v', self.buy_bid,      str(ORDER_BASE_SIZE * 5), 'Buy shares at bid'],
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
             ['ctrl', 'x',  self.sell_bid,     '2',   'Sell half position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
@@ -124,15 +124,9 @@ class ClickTrader:
         self.buy(size)
        
     def buy_bid(self, size):
-        print('Buy ' + str(self.buy_size) + ' shares at the BID')
+        print('Buy ' + str(size) + ' shares at the BID')
         pyautogui.doubleClick(bid_pos)
-        
-        if self.position_size == 0:
-            self.position_size = self.buy_size
-        else:
-            pass
-
-        self.buy(str(self.buy_size))
+        self.buy(str(size))
 
     def sell(self, size):
         while(keyboard.is_pressed('ctrl')):
@@ -169,9 +163,12 @@ class ClickTrader:
 
     def set_pos_size(self, size):
         print('Set bid size: ')
-        self.buy_size = int(input())
+        try:
+            self.position_size = int(input())
+        except:
+            print(traceback.format_exc())
         
-        print('Position size: ' + str(self.buy_size))
+        print('Position size: ' + str(self.position_size))
 
     def dec_pos_size(self, size):
         if self.position_size > 0:
