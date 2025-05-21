@@ -22,7 +22,7 @@ position_size_file = 'settings/position_size'
 #Clear the terminal
 os.system('cls' if os.name == 'nt' else 'clear')
 
-script_verstion = "1.3.8"
+script_verstion = "1.3.9"
 print('\nClickTrader version: ' + script_verstion, end='')
 print('    (\'Shift\' + \'esc\' to exit)')  
 
@@ -162,12 +162,15 @@ class ClickTrader:
         self.sell(size)
 
     def set_pos_size(self, size):
-        print('Set bid size: ')
         try:
+            print('Set bid size: ')
+            time.sleep(1)
+            pyautogui.hotkey('ctrl', 'backspace')
+
             self.position_size = int(input())
         except:
             print(traceback.format_exc())
-        
+
         print('Position size: ' + str(self.position_size))
 
     def dec_pos_size(self, size):
@@ -177,7 +180,7 @@ class ClickTrader:
 
             if self.position_size < 0:
                 self.position_size = 0
-                
+
             self.write_position_size(self.position_size)
 
     def inc_pos_size(self, size):
@@ -188,7 +191,7 @@ class ClickTrader:
     def print_all(self, none):
         for cmd in self.shortKeyList:
             print (cmd[0] + '+' + cmd[1] + ': ' + cmd[4])
-       
+
 
 ct = ClickTrader()
 
