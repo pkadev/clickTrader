@@ -71,6 +71,8 @@ class ClickTrader:
             ['shift', '0', self.buy_ask,      str(ORDER_BASE_SIZE * 10), 'Buy shares at ask'],
             ['shift', 'b', self.buy_bid,      str(ORDER_BASE_SIZE * 10), 'Buy shares at bid'],
             ['shift', 'v', self.buy_bid,      str(ORDER_BASE_SIZE * 5), 'Buy shares at bid'],
+            ['shift', 'c', self.buy_bid,      str(ORDER_BASE_SIZE * 2), 'Buy shares at bid'],
+            ['shift', 'x', self.buy_bid,      str(ORDER_BASE_SIZE * 1), 'Buy shares at bid'],
             ['ctrl', 'z',  self.sell_bid,     '0',   'Sell whole position at bid'],
             ['ctrl', 'x',  self.sell_bid,     '2',   'Sell half position at bid'],
             ['ctrl', 'k',  self.sell_ask,     '0',   'Sell whole position at ask'],
